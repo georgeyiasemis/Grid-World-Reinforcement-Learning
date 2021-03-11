@@ -133,7 +133,7 @@ def value_iteration(grid, gamma=1.0, threshold=0.0001):
                 optimal_policy[state_idx, np.argmax(Q)] = 1
 
 
-            return optimal_policy, epochs, V
+            return optimal_policy, epochs
 
 def MC_policy_evaluation(grid, policy, num_episodes, gamma=1.0):
 
