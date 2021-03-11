@@ -39,9 +39,7 @@ class GridWorld(object):
         # Randomizing action results: [1 0 0 0] to no Noise in the action results.
         self.action_randomizing_array = [0.4, 0.2, 0.2 , 0.2]
 
-        ############################################
-
-        #### Internal State  ####
+        ######################### Internal State  ##############################
 
         # Get attributes defining the world
         state_size, T, R, absorbing, locs = self.build_grid_world()
@@ -87,9 +85,6 @@ class GridWorld(object):
         #Illustrating the grid world
         if paint_maps:
             self.paint_maps()
-        ################################
-
-
 
     def reset_starting_loc(self, loc, paint=False):
         assert loc not in self.obstacle_locs and loc not in self.absorbing_locs
@@ -103,16 +98,13 @@ class GridWorld(object):
             self.paint_maps()
 
 
-    ####### Getters ###########
-
+    ################################ Getters ###################################
     def get_transition_matrix(self):
         return self.T
 
     def get_reward_matrix(self):
         return self.R
-
-
-    ########################
+    ############################################################################
 
     def draw_deterministic_policy(self, Policy):
         # Draw a deterministic policy
@@ -130,10 +122,12 @@ class GridWorld(object):
             plt.text(location[1], location[0], action_arrow, ha='center', va='center')
 
         plt.show()
-    ###########################################################
+
+    ############################################################################
 
 
-    ########### Internal Helper Functions #####################
+
+    ###################### Internal Helper Functions ###########################
     def paint_maps(self, savefig=True):
         plt.figure(figsize=(16,8))
 
@@ -285,7 +279,7 @@ class GridWorld(object):
             #default is to return to the same location
             return loc
 
-    ############# Methods to move in the environment model-free ###############
+    ############## Methods to move in the environment model-free ###############
 
     def step(self, loc, policy):
         # Make sure loc is not a wall
@@ -340,10 +334,8 @@ class GridWorld(object):
             if self.absorbing[0, transition[-1]]:
                 return episode
 
-        # If max_episode_len is reached end episode even without reaching an absorbing state
+        # If max_episode_len is reached end episode even without reaching an
+        # absorbing state
         return episode
 
-###########################################
-
-if __name__ == '__main__':
-    grid = GridWorld(T)
+################################################################################
