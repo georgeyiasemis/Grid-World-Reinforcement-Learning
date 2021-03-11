@@ -3,7 +3,7 @@ import numpy as np
 from environment import GridWorld
 from methods import *
 
-# Examples of Policy Evaluation, Policy Iteration and Value Iteration
+# Examples of Policy Evaluation, Policy Iteration
 
 # Define Environment
 grid = GridWorld()
