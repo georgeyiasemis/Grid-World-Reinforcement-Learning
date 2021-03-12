@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-
+from environment import *
 
 def policy_evaluation(grid, policy, gamma=1.0, threshold=0.0001):
     # Make sure policy has right dimensions
@@ -157,5 +157,30 @@ def MC_policy_evaluation(grid, policy, num_episodes, gamma=1.0):
             G = np.sum(G)
             R[grid.loc_to_state(state, grid.locs)].append(G)
             V[grid.loc_to_state(state, grid.locs)] = np.mean(R[grid.loc_to_state(state, grid.locs)])
+
+    return np.array(V)
+
+
+def TD_estimation(grid, policy, num_episodes, gamma=1.0):
+
+    V = [0.0 for i in range(grid.state_size)]
+    # State visit counter
+    C = [0 for i in range(grid.state_size)]
+
+    for i in range(num_episodes):
+        starting_loc = random.choice(list(set(grid.locs)-set(grid.absorbing_locs)))
+        starting_state = grid.loc_to_state(starting_loc, grid.locs)
+
+        trace = grid.sample_episode(policy, starting_loc, gamma=gamma, max_episode_len=100)
+        for transition in trace:
+            state = grid.loc_to_state(transition[0], grid.locs)
+            C[state] += 1
+            state_prime = grid.loc_to_state(transition[-1], grid.locs)
+            reward = transition[2]
+            td_target = reward + gamma * V[state_prime]
+            td_error = td_target - V[state]
+            alpha_t = 1 / C[state]
+            # Gradually forget older visits
+            V[state] += alpha_t * td_error
 
     return np.array(V)
