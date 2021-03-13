@@ -24,7 +24,7 @@ class GridWorld(object):
         self.special_rewards = [10, -100, -100, -100, 10] #corresponds to each of the absorbing_locs
 
         # Reward for all the other states
-        self.default_reward = 0
+        self.default_reward = -5
 
         # Starting location, can be reset using the corresponding method
         self.starting_loc = (3, 0)
@@ -122,6 +122,7 @@ class GridWorld(object):
             plt.text(location[1], location[0], action_arrow, ha='center', va='center')
 
         plt.show()
+        plt.savefig('./det_policy.png')
 
     ############################################################################
 
@@ -246,6 +247,10 @@ class GridWorld(object):
     def state_to_loc(self, state):
         # Takes an index and returns the corresponding index
         return self.locs[state]
+
+    def action_to_idx(self, action):
+        actions_idx = {'nr': 0, 'ea': 1, 'so': 2, 'we': 3}
+        return actions_idx[action]
 
     def is_location(self, loc):
         # It is a valid location if it is in grid and not obstacle

@@ -4,7 +4,13 @@
 
 This repository contains implementations of RL techniques on a Grid World:
 
-- Policy Evaluation
-- Policy Iteration
-- Value Iteration
-- First Visit Monte Carlo Policy Evaluation
+* Markov Decision Process
+  - Policy Evaluation
+  - Policy Iteration
+  - Value Iteration
+
+* Model Free
+  - First Visit Monte Carlo (MC) Policy Evaluation
+  - Temporal Difference (TD) Estimation
+  - On policy $$\epsilon$$-greedy First Visit MC control
+  - MC $$\epsilon$$-greedy First Visit Iterative Optimisation
