@@ -270,16 +270,3 @@ def MC_iterative_eps_greedy_control(grid, num_episodes, gamma=1.0, epsilon=1.0, 
         policy[visited_states, other_actions] = epsilon / grid.action_size
 
     return Q, policy
-
-grid = GridWorld()
-# policy = np.ones((grid.state_size, grid.action_size)) * 0.25
-Q, p = MC_iterative_eps_greedy_control(grid, 5000, 0.9, 0.995, 0.20)
-
-# p,_ = value_iteration(grid, 0.9, 0.000001)
-# TD_estimation(grid, policy, 100)
-p = np.argmax(p, 1)
-# print(Q)
-print(p)
-grid.draw_deterministic_policy(p)
-
-# print(MC_policy_evaluation(grid,policy,1000))
