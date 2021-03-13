@@ -12,5 +12,5 @@ This repository contains implementations of RL techniques on a Grid World:
 * Model Free
   - First Visit Monte Carlo (MC) Policy Evaluation
   - Temporal Difference (TD) Estimation
-  - On policy $\epsilon$-greedy First Visit MC control
-  - MC $\epsilon$-greedy First Visit Iterative Optimisation
+  - On policy ε-greedy First Visit MC control
+  - MC ε-greedy First Visit Iterative Optimisation
