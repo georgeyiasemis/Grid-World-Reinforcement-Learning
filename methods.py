@@ -231,6 +231,46 @@ def on_policy_eps_greedy_MC_control(grid, policy, num_episodes, gamma=1.0, epsil
 
     return Q, policy
 
+def MC_iterative_eps_greedy_control(grid, num_episodes, gamma=1.0, epsilon=0.9, alpha=0.1):
+    # Init state-action function to zeros
+    Q = np.zeros((grid.state_size, grid.action_size))
+    # Init eps-greedy policy
+    policy = np.ones((grid.state_size, grid.action_size)) * 0.25
+
+    for i in range(num_episodes):
+        # Start at random location
+        starting_loc = random.choice(list(set(grid.locs) - set(grid.absorbing_locs)))
+        # Sample a trace
+        trace = grid.sample_episode(policy, starting_loc, gamma=gamma, max_episode_len=100)
+        # Encourage exploration at first episodes
+        epsilon = max(epsilon * 0.99995, 0.05)
+        # Create a state, action trace
+        trace_state_actions = [(s, a) for (s, a, _, _) in trace]
+        # List of visited states
+        visited_states = list(set(grid.loc_to_state(transition[0], grid.locs) for transition in trace))
+        visited_states.sort()
+        # List of visited state-action pairs
+        visited_state_actions = [state_action for t, state_action in \
+                            enumerate(trace_state_actions) if state_action not in trace_state_actions[:t]]
+
+        # Since we are doing first visit MC
+        for state_action in visited_state_actions:
+            state_action_1st_occurance_idx = trace_state_actions.index(state_action)
+            G = np.sum([transition[2] * gamma ** k for (k, transition) in \
+                    enumerate(trace[state_action_1st_occurance_idx:])])
+            state_loc, action = state_action
+            state = grid.loc_to_state(state_loc, grid.locs)
+            Q[state, grid.action_to_idx(action)] += alpha * (G - Q[state, grid.action_to_idx(action)])
+
+        # Make an epsilon-greedy policy
+        best_actions = np.argmax(Q[visited_states], 1)
+        policy[visited_states, best_actions] = 1 - epsilon + epsilon / grid.action_size
+        other_actions = [[i for i in range(grid.action_size) if i!= j] for j in best_actions]
+        other_actions = np.array(other_actions).T
+        policy[visited_states, other_actions] = epsilon / grid.action_size
+
+    return Q, policy
+
 def MC_iterative_eps_greedy_control(grid, num_episodes, gamma=1.0, epsilon=1.0, alpha=0.1):
     # Init state-action function to zeros
     Q = np.zeros((grid.state_size, grid.action_size))
