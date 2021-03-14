@@ -310,6 +310,26 @@ class GridWorld(object):
 
         return transition
 
+    def state_action_step(self, state_idx, action_idx):
+        # Make sure loc is not a wall
+        assert self.state_to_loc(state_idx) in self.locs
+        # state_idx = self.loc_to_state(loc, self.locs)
+
+        # Available actions/directions
+        actions = ['nr', 'ea', 'so', 'we']
+
+        action = actions[action_idx]
+        # Move to the next location/state
+        loc_prime = self.get_neighbour(self.state_to_loc(state_idx), action)
+        state_prime_idx = self.loc_to_state(loc_prime, self.locs)
+        # Observe reward
+        reward = self.R[state_prime_idx, state_idx, action_idx]
+        # Return transition (st, at, rt, st+1)
+        transition = (state_idx, action_idx, reward, state_prime_idx)
+
+        return transition
+
+
     def sample_episode(self, policy, starting_loc, gamma, max_episode_len=30):
         # Samples an episode of maximum length max_episode_len
 

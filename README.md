@@ -14,3 +14,5 @@ This repository contains implementations of RL techniques on a Grid World:
   - Temporal Difference (TD) Estimation
   - On policy ε-greedy First Visit MC control
   - MC ε-greedy First Visit Iterative Optimisation
+  - SARSA: On-policy TD control
+  - Q-Learning: Off-policy TD control
