@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('TkAgg')
+
 
 class GridWorld(object):
 
@@ -151,6 +154,15 @@ class GridWorld(object):
             location = self.locs[state]
             plt.text(location[1], location[0], 's{}'.format(state), ha='center', va='center')
 
+        for j in range(1, 5):
+            plt.subplot(1, 4, j)
+            plt.xlim((-0.5, self.shape[1] - 0.5))
+            plt.ylim((self.shape[0] - 0.5, -0.5))
+            plt.yticks(np.linspace(self.shape[0] - 0.5, -0.5, self.shape[0] + 1))
+            plt.xticks(np.linspace(-0.5, self.shape[1] - 0.5, self.shape[1] + 1))
+            plt.grid(color='m')
+
+        plt.show()
         plt.show()
 
         if savefig:
@@ -363,4 +375,41 @@ class GridWorld(object):
         # absorbing state
         return episode
 
+    def plot_trace(self, trace, waitforkey=False):
+        # Trace should be a sequence of all states
+        # Works only for linux Users
+
+        plt.figure(figsize=(16,20))
+        plt.imshow(self.absorbers + self.walls)
+        plt.xlim((-0.5, self.shape[1] - 0.5))
+        plt.ylim((self.shape[0] - 0.5, -0.5))
+        plt.yticks(np.linspace(self.shape[0] - 0.5, -0.5, self.shape[0] + 1))
+        plt.xticks(np.linspace(-0.5, self.shape[1] - 0.5, self.shape[1] + 1))
+        plt.grid(color='m')
+
+        for i in range(1, len(trace)):
+
+            plt.pause(0.05)
+            r = (len(trace) - 1 - i) / (len(trace)-2)
+            g = (i - 1) /(len(trace)-2)
+
+            state = trace[i-1]
+            state_prime = trace[i]
+            s = np.stack((state, state_prime))
+            if i == 1:
+                plt.scatter(s[0,1], s[0,0], color='r', linewidths=10)
+                plt.scatter(s[1,1], s[1,0], color='k')
+
+            elif i == len(trace)-1:
+                plt.scatter(s[0,1], s[0,0], color='k')
+                plt.scatter(s[1,1], s[1,0], color='g', linewidths=10)
+
+            else:
+                plt.scatter(s[:,1], s[:,0], color='k')
+
+            plt.plot(s[:,1], s[:,0],'-', color=(r,g,0), linewidth=3)
+
+        plt.show()
+        if waitforkey:
+            plt.waitforbuttonpress()
 ################################################################################

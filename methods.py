@@ -298,6 +298,7 @@ def SARSA(grid, num_episodes,  max_episode_len=100, gamma=1.0, epsilon=1.0, alph
             Q[state_idx, action_idx] += alpha * \
                     (reward + gamma * Q[state_prime_idx, action_prime_idx] - Q[state_idx, action_idx])
 
+            # Update state, action
             state_idx, action_idx = state_prime_idx, action_prime_idx
 
         # Encourage exploration at first episodes
@@ -332,6 +333,7 @@ def Q_learning(grid, num_episodes,  max_episode_len=100, gamma=1.0, epsilon=1.0,
             Q[state_idx, action_idx] += alpha * \
                     (reward + gamma * Q[state_prime_idx].max() - Q[state_idx, action_idx])
 
+            # Update state
             state_idx = state_prime_idx
 
         # Encourage exploration at first episodes
@@ -359,3 +361,6 @@ def epsilon_greedy_action(Q, epsilon, state_idx):
         # p(a = a', a'!= a*|s) = epsilon / |A(s)|
         action_idx = np.random.choice(range(Q.shape[1]))
     return action_idx
+
+
+
