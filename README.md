@@ -1,5 +1,5 @@
 # Grid World - Reinforcement Learning
-![download](https://user-images.githubusercontent.com/71031687/110820315-a5e73e00-8297-11eb-9db5-e2e7a8c2954b.png)
+![gridworld](https://user-images.githubusercontent.com/71031687/111219221-71012100-85e0-11eb-8d5e-ea1994f97ecd.png)
 
 This repository contains implementations of RL techniques on a Grid World:
 
@@ -18,5 +18,5 @@ This repository contains implementations of RL techniques on a Grid World:
 
 
 
-![grid_trace](https://user-images.githubusercontent.com/71031687/111086804-fb854a00-8526-11eb-8262-c474783ced19.png)
+![trace](https://user-images.githubusercontent.com/71031687/111219256-7b231f80-85e0-11eb-834d-9a7d01c082c4.png)
 
