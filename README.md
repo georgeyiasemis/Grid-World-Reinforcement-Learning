@@ -1,5 +1,5 @@
+![trace](https://user-images.githubusercontent.com/71031687/111219393-a148bf80-85e0-11eb-9945-f3d4a8b57ff4.png)
 # Grid World - Reinforcement Learning
-![gridworld](https://user-images.githubusercontent.com/71031687/111219221-71012100-85e0-11eb-8d5e-ea1994f97ecd.png)
 
 This repository contains implementations of RL techniques on a Grid World:
 
@@ -16,7 +16,4 @@ This repository contains implementations of RL techniques on a Grid World:
   - SARSA: On-policy TD control
   - Q-Learning: Off-policy TD control
 
-
-
-![trace](https://user-images.githubusercontent.com/71031687/111219256-7b231f80-85e0-11eb-834d-9a7d01c082c4.png)
-
+![gridworld](https://user-images.githubusercontent.com/71031687/111219221-71012100-85e0-11eb-8d5e-ea1994f97ecd.png)
