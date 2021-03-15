@@ -361,6 +361,3 @@ def epsilon_greedy_action(Q, epsilon, state_idx):
         # p(a = a', a'!= a*|s) = epsilon / |A(s)|
         action_idx = np.random.choice(range(Q.shape[1]))
     return action_idx
-
-
-

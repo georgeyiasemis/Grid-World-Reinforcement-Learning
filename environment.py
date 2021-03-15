@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('TkAgg')
+from matplotlib.colors import ListedColormap
+# Uncomment if your compiler can run it
+# matplotlib.use('TkAgg')
 
 
 class GridWorld(object):
@@ -69,7 +71,6 @@ class GridWorld(object):
         self.initial = np.zeros((1, len(locs)));
         self.initial[0, self.starting_state] = 1
 
-
         # Placing the walls on a bitmap
         self.walls = np.zeros(self.shape);
         for ob in self.obstacle_locs:
@@ -129,40 +130,39 @@ class GridWorld(object):
 
     ############################################################################
 
-
-
     ###################### Internal Helper Functions ###########################
-    def paint_maps(self, savefig=True):
+    def paint_maps(self, show_state_names=True, savefig=True):
+
         plt.figure(figsize=(16,8))
+        plt.title('Grid World', fontsize=20)
 
-        plt.subplot(1,4,1)
-        plt.imshow(self.walls)
-        plt.title('Walls')
+        # Make a discrete color bar with labels
+        labels = ['Absorbing\nStates', 'States', 'Walls']
+        colors = {-1: "cyan", 0: "m", 1: 'black'}
+        cm = ListedColormap([colors[x] for x in colors.keys()])
+        norm_bins = np.sort([*colors.keys()]) + 0.5
+        norm_bins = np.insert(norm_bins, 0, np.min(norm_bins) - 1.0)
+        ## Make normalizer and formatter
+        norm = matplotlib.colors.BoundaryNorm(norm_bins, len(labels), clip=True)
+        fmt = matplotlib.ticker.FuncFormatter(lambda x, pos: labels[norm(x)])
 
-        plt.subplot(1,4,2)
-        plt.imshow(self.absorbers)
-        plt.title('Absorbing States')
+        diff = norm_bins[1:] - norm_bins[:-1]
+        tickz = norm_bins[:-1] + diff / 2
+        plt.imshow(self.walls + self.absorbers, cmap=cm, norm=norm)
+        plt.colorbar(format=fmt, ticks = tickz)
 
-        plt.subplot(1,4,3)
-        plt.imshow(self.rewarders)
-        plt.title('Rewarding States')
+        plt.xlim((-0.5, self.shape[1] - 0.5))
+        plt.ylim((self.shape[0] - 0.5, -0.5))
+        plt.yticks(np.linspace(self.shape[0] - 0.5, -0.5, self.shape[0] + 1))
+        plt.xticks(np.linspace(-0.5, self.shape[1] - 0.5, self.shape[1] + 1))
+        plt.grid(color='k')
 
-        plt.subplot(1,4,4)
-        plt.imshow(self.rewarders + self.absorbers)
-        plt.title('States')
-        for state in range(self.state_size):
-            location = self.locs[state]
-            plt.text(location[1], location[0], 's{}'.format(state), ha='center', va='center')
-
-        for j in range(1, 5):
-            plt.subplot(1, 4, j)
-            plt.xlim((-0.5, self.shape[1] - 0.5))
-            plt.ylim((self.shape[0] - 0.5, -0.5))
-            plt.yticks(np.linspace(self.shape[0] - 0.5, -0.5, self.shape[0] + 1))
-            plt.xticks(np.linspace(-0.5, self.shape[1] - 0.5, self.shape[1] + 1))
-            plt.grid(color='m')
-
-        plt.show()
+        if show_state_names:
+            for state in range(self.state_size):
+                loc = self.locs[state]
+                plt.text(loc[1], loc[0], r'$s_{{{}}}$'.format(state), ha='center', va='center')
+                if loc in self.absorbing_locs:
+                    plt.text(loc[1] + 0.45, loc[0] + 0.4, '{} = {}'.format(r'$\mathit{R}$', self.rewarders[loc]), ha='right', va='bottom', fontsize=10)
         plt.show()
 
         if savefig:
@@ -181,22 +181,18 @@ class GridWorld(object):
 
         for action in range(4):
             for effect in range(4):
-
                 # Randomize the outcome of taking an action
                 outcome = (action + effect + 1) % 4
-
                 if outcome == 0:
                     outcome = 3
                 else:
                     outcome -= 1
-
                 # Fill the transition matrix
                 prob = self.action_randomizing_array[effect]
                 for prior_state in range(S):
                     post_state = neighbours[prior_state, outcome]
                     post_state = int(post_state)
                     T[post_state, prior_state, action] += prob
-
 
         # Build the reward matrix
         R = self.default_reward * np.ones((S, S, 4))
@@ -375,21 +371,18 @@ class GridWorld(object):
         # absorbing state
         return episode
 
-    def plot_trace(self, trace, waitforkey=False):
+    def plot_trace(self, trace, savefig=False, wait=False, waitforkey=False):
         # Trace should be a sequence of all states
         # Works only for linux Users
 
-        plt.figure(figsize=(16,20))
-        plt.imshow(self.absorbers + self.walls)
-        plt.xlim((-0.5, self.shape[1] - 0.5))
-        plt.ylim((self.shape[0] - 0.5, -0.5))
-        plt.yticks(np.linspace(self.shape[0] - 0.5, -0.5, self.shape[0] + 1))
-        plt.xticks(np.linspace(-0.5, self.shape[1] - 0.5, self.shape[1] + 1))
-        plt.grid(color='m')
+        # plt.figure(figsize=(16,20))
+        # plt.imshow(self.absorbers + self.walls)
+
+        self.paint_maps(False, False)
 
         for i in range(1, len(trace)):
-
-            plt.pause(0.05)
+            if wait:
+                plt.pause(0.05)
             r = (len(trace) - 1 - i) / (len(trace)-2)
             g = (i - 1) /(len(trace)-2)
 
@@ -409,7 +402,12 @@ class GridWorld(object):
 
             plt.plot(s[:,1], s[:,0],'-', color=(r,g,0), linewidth=3)
 
+            for loc in self.absorbing_locs:
+                plt.text(loc[1], loc[0] + 0.25, '{} = {}'.format(r'$\mathit{R}$', self.rewarders[loc]), ha='center', va='bottom', fontsize=10)
+
         plt.show()
         if waitforkey:
             plt.waitforbuttonpress()
+        if savefig:
+            plt.savefig('./trace.png')
 ################################################################################
