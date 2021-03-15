@@ -40,7 +40,6 @@ class GridWorld(object):
         # Number of actions
         self.action_size = len(self.action_names)
 
-
         # Randomizing action results: [1 0 0 0] to no Noise in the action results.
         self.action_randomizing_array = [0.4, 0.2, 0.2 , 0.2]
 
@@ -79,7 +78,7 @@ class GridWorld(object):
         # Placing the absorbers on a grid for illustration
         self.absorbers = np.zeros(self.shape)
         for ab in self.absorbing_locs:
-            self.absorbers[ab] = -1
+            self.absorbers[ab] = - 1
 
         # Placing the rewarders on a grid for illustration
         self.rewarders = np.zeros(self.shape)
@@ -114,9 +113,9 @@ class GridWorld(object):
         # Draw a deterministic policy
         # The policy needs to be a np array of self.state_size values between 0 and 3 with
         # 0 -> N, 1->E, 2->S, 3->W
-        plt.figure()
-        plt.imshow(self.walls + self.rewarders + self.absorbers)
 
+        self.paint_maps(False, False)
+        plt.title('Deterministic Policy', fontsize=20)
         arrows = [r"$\uparrow$",r"$\rightarrow$", r"$\downarrow$", r"$\leftarrow$"]
         for state, action in enumerate(Policy):
             if self.absorbing[0, state]:
@@ -239,12 +238,11 @@ class GridWorld(object):
                 # Insert into neighbour matrix
                 state_neighbours[state, direction] = nstate;
 
-
         # Translate absorbing locations into absorbing state indices
         absorbing = np.zeros((1, num_states))
         for a in self.absorbing_locs:
             absorbing_state = self.loc_to_state(a, locs)
-            absorbing[0, absorbing_state] =1
+            absorbing[0, absorbing_state] = 1
 
         return locs, state_neighbours, absorbing
 
@@ -274,10 +272,10 @@ class GridWorld(object):
         i = loc[0]
         j = loc[1]
 
-        nr = (i-1,j)
-        ea = (i,j+1)
-        so = (i+1,j)
-        we = (i,j-1)
+        nr = (i-1, j)
+        ea = (i, j+1)
+        so = (i+1, j)
+        we = (i, j-1)
 
         # If the neighbour is a valid location, accept it, otherwise, stay put
         if(direction == 'nr' and self.is_location(nr)):
@@ -383,8 +381,9 @@ class GridWorld(object):
         for i in range(1, len(trace)):
             if wait:
                 plt.pause(0.05)
-            r = (len(trace) - 1 - i) / (len(trace)-2)
-            g = (i - 1) /(len(trace)-2)
+            # Interpolate red and green colors
+            r = (len(trace) - 1 - i) / (len(trace) - 2)
+            g = (i - 1) / (len(trace) - 2)
 
             state = trace[i-1]
             state_prime = trace[i]
@@ -400,7 +399,7 @@ class GridWorld(object):
             else:
                 plt.scatter(s[:,1], s[:,0], color='k')
 
-            plt.plot(s[:,1], s[:,0],'-', color=(r,g,0), linewidth=3)
+            plt.plot(s[:,1], s[:,0],'-', color=(r, g, 0), linewidth=3)
 
             for loc in self.absorbing_locs:
                 plt.text(loc[1], loc[0] + 0.25, '{} = {}'.format(r'$\mathit{R}$', self.rewarders[loc]), ha='center', va='bottom', fontsize=10)
