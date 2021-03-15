@@ -16,5 +16,6 @@ This repository contains implementations of RL techniques on a Grid World:
   - MC ε-greedy First Visit Iterative Optimisation
   - SARSA: On-policy TD control
   - Q-Learning: Off-policy TD control
-  - 
+
+
 ![trace](https://user-images.githubusercontent.com/71031687/111219393-a148bf80-85e0-11eb-9945-f3d4a8b57ff4.png)
